@@ -41,7 +41,7 @@ ext.addTaskToCopyAllOutputs = { task ->
 }
 
 def artifactGroupId = 'org.fairportrobotics.poe'
-def baseArtifactId = 'PotentialOctoEurekaLibrary'
+def baseArtifactId = 'potential-octo-eureka-library'
 def zipBaseName = "_GROUP_org_fairportrobotics_poe_ID_${baseArtifactId}-java_CLS"
 def javaBaseName = "_GROUP_org_fairportrobotics_poe_ID_${baseArtifactId}-java_CLS"
 
@@ -98,8 +98,12 @@ def releasesRepoUrl = "$buildDir/repos/releases"
 publishing {
     repositories {
         maven {
-
-            url = releasesRepoUrl
+            name = "GitHubPackages"
+            url = uri("https://maven.pkg.github.com/FairportRobotics/potential-octo-eureka")
+            credentials {
+                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+            }
         }
     }
 }
@@ -113,7 +117,6 @@ tasks.matching {it != cleanReleaseRepo}.all {it.dependsOn cleanReleaseRepo}
 model {
     publishing {
         publications {
-
             java(MavenPublication) {
                 artifact jar
                 artifact sourcesJar
