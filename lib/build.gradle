@@ -9,7 +9,7 @@
 plugins {
     // Apply the java-library plugin for API and implementation separation.
     id 'java'
-    id 'edu.wpi.first.GradleRIO' version '2022.2.1'
+    id 'edu.wpi.first.GradleRIO' version '2023.2.1'
 }
 
 repositories {
@@ -18,7 +18,13 @@ repositories {
     mavenLocal()
     gradlePluginPortal()
     maven{
-        url 'https://maven.ctr-electronics.com/release/'
+    	url "https://maven.photonvision.org/repository/snapshots"
+    }
+    maven{
+	url "https://maven.photonvision.org/repository/internal"
+    }
+    maven{	
+        url "https://maven.ctr-electronics.com/release/"
     }
 }
 
@@ -41,8 +47,10 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-core:2.10.0"
     implementation "com.fasterxml.jackson.core:jackson-databind:2.10.0"
     implementation 'edu.wpi.first.thirdparty.frc2022.opencv:opencv-java:4.5.2-1'
-    implementation 'com.ctre.phoenix:api-java:5.20.2'
-    implementation 'com.ctre.phoenix:wpiapi-java:5.20.2'
+    implementation 'com.ctre.phoenix:api-java:5.30.3'
+    implementation 'com.ctre.phoenix:wpiapi-java:5.30.3'
+    implementation "org.photonvision:PhotonLib-java:v2023.2.1"
+    implementation "org.photonvision:PhotonTargeting-java:v2023.2.1"
 }
 
 tasks.named('test') {
