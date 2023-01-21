@@ -6,6 +6,8 @@ import java.util.List;
 import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import edu.wpi.first.math.geometry.Transform3d;
+
 public class AprilTags { 
     // an ArrayList to store the cameras
     public final ArrayList<PhotonCamera> cameras = new ArrayList<>();
@@ -59,7 +61,7 @@ public class AprilTags {
         if(!hasTargets()) return null;
         PhotonTrackedTarget closestTarget = null;
         for(PhotonTrackedTarget target : getTargets()) {
-            if(closestTarget == null || Math.abs(target.getBestCameraToTarget().getY()) > Math.abs(target.getBestCameraToTarget().getY()) ) closestTarget = target;
+            if(closestTarget == null || calculateDistance(target.getBestCameraToTarget()) > calculateDistance(target.getBestCameraToTarget()) ) closestTarget = target;
         }
         return closestTarget;
     }
@@ -75,4 +77,7 @@ public class AprilTags {
         return lowestAmbiguity;
     }
 
+    private double calculateDistance(Transform3d t) {
+        return Math.sqrt(t.getX()*t.getX() + t.getY()*t.getY() + t.getZ()*t.getZ());
+    }
 }
