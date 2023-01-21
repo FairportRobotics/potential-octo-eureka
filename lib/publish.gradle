@@ -1,8 +1,10 @@
+import org.gradle.internal.os.OperatingSystem
+
 apply plugin: 'maven-publish'
 
 ext.licenseFile = files("$rootDir/LICENSE.txt")
 
-def pubVersion = '2022.0.1'
+def pubVersion = '2023.1.0'
 
 def outputsFolder = file("$buildDir/allOutputs")
 
@@ -24,6 +26,8 @@ task outputVersions() {
 }
 
 task libraryBuild() {}
+
+task pubLocal(dependsOn: 'publishAllPublicationsToFrcHomeRepository') {}
 
 build.dependsOn outputVersions
 
@@ -95,6 +99,22 @@ libraryBuild.dependsOn build
 
 def releasesRepoUrl = "$buildDir/repos/releases"
 
+String frcYear = '2023'
+File frcHome
+if (OperatingSystem.current().isWindows()) {
+    String publicFolder = System.getenv('PUBLIC')
+    if (publicFolder == null) {
+        publicFolder = "C:\\Users\\Public"
+    }
+    def homeRoot = new File(publicFolder, "wpilib")
+    frcHome = new File(homeRoot, frcYear)
+} else {
+    def userFolder = System.getProperty("user.home")
+    def homeRoot = new File(userFolder, "wpilib")
+    frcHome = new File(homeRoot, frcYear)
+}
+def frcHomeMaven = new File(frcHome, 'maven')
+
 publishing {
     repositories {
         maven {
@@ -104,6 +124,11 @@ publishing {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
             }
+        }
+
+        maven {
+            name 'frcHome'
+            url frcHomeMaven
         }
     }
 }
