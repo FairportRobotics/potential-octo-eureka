@@ -9,7 +9,6 @@ import org.photonvision.PhotonPoseEstimator.PoseStrategy;
 import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
-import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 
@@ -23,12 +22,10 @@ public class RobotFieldPosition {
         Transform3d robotToCam = new Transform3d(new Translation3d(0.5, 0.0, 0.5), new Rotation3d(0,0,0)); 
         Cam mounted facing forward, half a meter forward of center, half a meter up from center.
     */
-    public RobotFieldPosition(String camera, Transform3d robotToCam) {
-        try {
-            layout = AprilTagFieldLayout.loadFromResource(AprilTagFields.k2022RapidReact.m_resourceFile);
-        } catch(IOException exception) {
-            exception.printStackTrace();
-        }
+    public RobotFieldPosition(String camera, Transform3d robotToCam, String layoutResourceFile) throws IOException {
+
+        layout = AprilTagFieldLayout.loadFromResource(layoutResourceFile);
+        
         PhotonCamera cam = new PhotonCamera(camera);
         photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, robotToCam);
     }  
