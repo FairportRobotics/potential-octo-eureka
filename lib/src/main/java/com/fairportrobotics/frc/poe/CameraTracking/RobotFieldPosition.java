@@ -30,8 +30,7 @@ public class RobotFieldPosition {
         photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, robotToCam);
     }  
 
-    public Optional<EstimatedRobotPose> getEstimatedGlobalPose(Pose2d prevEstimatedRobotPose) {
-        photonPoseEstimator.setReferencePose(prevEstimatedRobotPose);
+    public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
         return photonPoseEstimator.update();
     }
 
