@@ -10,11 +10,14 @@ import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class RobotFieldPosition {
     AprilTagFieldLayout layout;
     PhotonPoseEstimator photonPoseEstimator;
+    Optional<EstimatedRobotPose> frozenPose;
+    boolean frozen = false;
 
     /*
      * Example of Transform3d:
@@ -35,7 +38,7 @@ public class RobotFieldPosition {
         layout = AprilTagFieldLayout.loadFromResource(layoutResourceFile);
 
         PhotonCamera cam = new PhotonCamera(camera);
-        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, robotToCam);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, strategy, cam, robotToCam);
     }
 
     public RobotFieldPosition(String camera, Transform3d robotToCam, AprilTagFields fields) throws IOException {
@@ -49,11 +52,26 @@ public class RobotFieldPosition {
         layout = AprilTagFieldLayout.loadFromResource(fields.m_resourceFile);
 
         PhotonCamera cam = new PhotonCamera(camera);
-        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, robotToCam);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, strategy, cam, robotToCam);
     }
 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
-        return photonPoseEstimator.update();
+        return frozen ? frozenPose : photonPoseEstimator.update();
     }
+
+    public void setLastPose(Pose2d pose) {
+        photonPoseEstimator.setLastPose(pose);
+    }
+
+    // For when you want it to stay the same across lines
+    public void freeze() {
+        frozen = true;
+        frozenPose = photonPoseEstimator.update();
+    }
+
+    public void unfreeze() {
+        frozen = false;
+    }
+
 
 }
