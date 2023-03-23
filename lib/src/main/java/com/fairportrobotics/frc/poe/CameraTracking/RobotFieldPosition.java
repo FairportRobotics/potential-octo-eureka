@@ -10,11 +10,9 @@ import org.photonvision.EstimatedRobotPose;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
-<<<<<<< Updated upstream
 import edu.wpi.first.math.geometry.Pose2d;
-=======
 import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
->>>>>>> Stashed changes
+import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class RobotFieldPosition {

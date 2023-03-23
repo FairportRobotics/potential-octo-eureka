@@ -4,11 +4,7 @@ apply plugin: 'maven-publish'
 
 ext.licenseFile = files("$rootDir/LICENSE.txt")
 
-<<<<<<< Updated upstream
-def pubVersion = '2023.2.1'
-=======
-def pubVersion = '2023.3.0'
->>>>>>> Stashed changes
+def pubVersion = '2023.3.1'
 
 def outputsFolder = file("$buildDir/allOutputs")
 
