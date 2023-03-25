@@ -63,7 +63,7 @@ public class RobotFieldPosition {
         this.layout = layout;
 
         PhotonCamera cam = new PhotonCamera(camera);
-        photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, robotToCam);
+        photonPoseEstimator = new PhotonPoseEstimator(layout, strategy, cam, robotToCam);
     }
 
     public Optional<EstimatedRobotPose> getEstimatedGlobalPose() {
