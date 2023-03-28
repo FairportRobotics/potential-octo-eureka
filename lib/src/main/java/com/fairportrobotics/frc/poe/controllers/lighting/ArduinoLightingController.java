@@ -23,7 +23,7 @@ public class ArduinoLightingController {
         Matcher m = colorPattern.matcher(colorValue);
         return m.find();
     }
-    private int executeColor(String colorValue, String command) {
+    public int executeColor(String colorValue, String command) {
         if ( validateColor(colorValue) ) {
             return bus.writeString( colorValue + command );
         }

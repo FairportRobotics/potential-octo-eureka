@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.I2C;
 public class TCS34725 {
 
     /** */
-    class TCS34725_RGB {
+    public class TCS34725_RGB {
         private int r, g, b;
 
         public TCS34725_RGB(int r, int g, int b) {
