@@ -11,13 +11,12 @@ import org.photonvision.EstimatedRobotPose;
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
-import edu.wpi.first.apriltag.AprilTagFieldLayout.OriginPosition;
 import edu.wpi.first.math.geometry.Transform3d;
 
 public class RobotFieldPosition {
     AprilTagFieldLayout layout;
     PhotonPoseEstimator photonPoseEstimator;
+    PhotonCamera camera;
     Optional<EstimatedRobotPose> frozenPose;
     boolean frozen = false;
 
@@ -46,8 +45,6 @@ public class RobotFieldPosition {
     public RobotFieldPosition(String camera, Transform3d robotToCam, AprilTagFields fields) throws IOException {
         layout = AprilTagFieldLayout.loadFromResource(fields.m_resourceFile);
 
-        layout.setOrigin(OriginPosition.kBlueAllianceWallRightSide);
-
         PhotonCamera cam = new PhotonCamera(camera);
         photonPoseEstimator = new PhotonPoseEstimator(layout, PoseStrategy.LOWEST_AMBIGUITY, cam, robotToCam);
     }
@@ -72,6 +69,14 @@ public class RobotFieldPosition {
 
     public void setLastPose(Pose2d pose) {
         photonPoseEstimator.setLastPose(pose);
+    }
+
+    public PhotonPoseEstimator getPhotonPoseEstimator(){
+        return photonPoseEstimator;
+    }
+
+    public PhotonCamera getPhotonCamera(){
+        return camera;
     }
 
     // For when you want it to stay the same across lines
