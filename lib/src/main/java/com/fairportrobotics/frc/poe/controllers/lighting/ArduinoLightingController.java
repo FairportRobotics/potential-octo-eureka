@@ -1,7 +1,6 @@
 package com.fairportrobotics.frc.poe.controllers.lighting;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -9,54 +8,113 @@ import edu.wpi.first.wpilibj.SerialPort;
 public class ArduinoLightingController {
     
     final SerialPort bus;
-    final Pattern colorPattern = Pattern.compile("\\d{9}");
-    private final String NULL_COLOR = "000000000";
-    private final String RAINBOW_VALUE =  NULL_COLOR + "254";
-    private final String SHIFT_VALUE = NULL_COLOR + "251";
-    private final String SHIFT_WRAP_VALUE = NULL_COLOR + "250";
+    private final static String NULL_COLOR = "000000000";
+    private final static String RAINBOW_VALUE =  NULL_COLOR + "254";
+    private final static String SHIFT_VALUE = NULL_COLOR + "251";
+    private final static String SHIFT_WRAP_VALUE = NULL_COLOR + "250";
+
+    private Thread lightingRunnerThread;
+    private boolean running = true;
+    private ArrayList<String> commandQueue = new ArrayList<>();
 
     public ArduinoLightingController(int baudRate, SerialPort.Port port) {
         this.bus = new SerialPort(baudRate, port);
+
+        this.lightingRunnerThread = new Thread(new Runnable() {
+            public void run(){
+                while(running){
+                    for(String command : commandQueue){
+                        bus.writeString(command);
+                        try{
+                            Thread.sleep(500);
+                        }catch(InterruptedException e){
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            }
+        });
+
+        lightingRunnerThread.start();
+
     }
 
-    private boolean validateColor(String colorValue) {
-        Matcher m = colorPattern.matcher(colorValue);
-        return m.find();
+    public void executeCommand(LightingCommand command) {
+
+        commandQueue.addAll(command.getCommands());
+
+        // if ( validateColor(colorValue) ) {
+        //     return bus.writeString( colorValue + command );
+        // }
+        // return 0;
     }
-    public int executeColor(String colorValue, String command) {
-        if ( validateColor(colorValue) ) {
-            return bus.writeString( colorValue + command );
+
+    public static class LightingCommandBuilder{
+
+        private ArrayList<String> commands;
+
+        public LightingCommandBuilder(){
+            commands= new ArrayList<>();
         }
-        return 0;
+
+        public LightingCommandBuilder setSpecificLED(String colorValue, String numberLED){
+            commands.add(colorValue + numberLED);
+            return this;
+        }
+
+        public LightingCommandBuilder fillAll(String colorValue){
+            commands.add(colorValue + "255");
+            return this;
+        }
+
+        public LightingCommandBuilder shiftWrap(){
+            commands.add(SHIFT_WRAP_VALUE);
+            return this;
+        }
+
+        public LightingCommandBuilder fillShift(String colorValue){
+            commands.add(colorValue + "252");
+            return this;
+        }
+
+        public LightingCommandBuilder shift(){
+            commands.add(SHIFT_VALUE);
+            return this;
+        }
+        
+        public LightingCommandBuilder fillRainbow(){
+            commands.add(RAINBOW_VALUE);
+            return this;
+        }
+
+        public LightingCommandBuilder flash(String colorValue){
+            commands.add(colorValue + "249");
+            return this;
+        }
+
+        public LightingCommandBuilder switchGradient(String colorValue){
+            commands.add(colorValue + "253");
+            return this;
+        }
+
+        public LightingCommand build(){
+            return new LightingCommand(commands);
+        }
+
     }
 
-    public int fillAll(String colorValue) {
-        return executeColor(colorValue, "255");
-    }
+    public static class LightingCommand{
+        private ArrayList<String> commands;
 
-    public int fillRainbow() {
-        return bus.writeString(RAINBOW_VALUE);
-    }
+        public LightingCommand(ArrayList<String> commands){
+            this.commands = commands;
+        }
 
-    public int switchGradient(String colorValue) {
-        return executeColor(colorValue, "253");
-    }
+        public ArrayList<String> getCommands(){
+            return commands;
+        }
 
-    public int fillShift(String colorValue) {
-        return executeColor(colorValue, "252");
     }
-
-    public int shift() {
-        return bus.writeString(SHIFT_VALUE);
-    }
-
-    public int shiftWrap() {
-        return bus.writeString(SHIFT_WRAP_VALUE);
-    }
-
-    public int flash(String colorValue) {
-        return executeColor(colorValue, "249");
-    }
-
 
 }
