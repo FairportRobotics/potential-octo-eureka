@@ -17,7 +17,7 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    container: wpilib/roborio-cross-ubuntu:2022-18.04
+    container: wpilib/roborio-cross-ubuntu:2024-22.04
     permissions:
       contents: read
       packages: write
@@ -42,7 +42,7 @@ jobs:
     - name: Publish to GitHub Packages
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: publish
+        arguments: -Prelease publish
       env:
         USERNAME: ${{ github.actor }}
         TOKEN: ${{ secrets.GITHUB_TOKEN }}
