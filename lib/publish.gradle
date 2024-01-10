@@ -57,16 +57,20 @@ task cleanReleaseRepo(type: Delete) {
 
 tasks.matching {it != cleanReleaseRepo}.all {it.dependsOn cleanReleaseRepo}
 
-model {
-    publishing {
-        publications {
-            java(MavenPublication) {
-                artifactId = "${baseArtifactId}-java"
-                groupId artifactGroupId
-                version pubVersion
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = "sources"
+}
 
-                from components.java
-            }
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact sourceJar
+            artifactId = "${baseArtifactId}-java"
+            groupId artifactGroupId
+            version = project.hasProperty('release') ? pubVersion : pubVersion + "-SNAPSHOT"
+
+            from components.java
         }
     }
 }
