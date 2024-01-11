@@ -4,8 +4,6 @@ apply plugin: 'maven-publish'
 
 ext.licenseFile = files("$rootDir/LICENSE.txt")
 
-def pubVersion = '2024.0.1'
-
 def outputsFolder = file("$buildDir/allOutputs")
 
 def versionFile = file("$outputsFolder/version.txt")
@@ -17,7 +15,6 @@ def javaBaseName = "_GROUP_org_fairportrobotics_poe_ID_${baseArtifactId}-java_CL
 
 def releasesRepoUrl = "$buildDir/repos/releases"
 
-String frcYear = '2023'
 File frcHome
 if (OperatingSystem.current().isWindows()) {
     String publicFolder = System.getenv('PUBLIC')
@@ -25,11 +22,11 @@ if (OperatingSystem.current().isWindows()) {
         publicFolder = "C:\\Users\\Public"
     }
     def homeRoot = new File(publicFolder, "wpilib")
-    frcHome = new File(homeRoot, frcYear)
+    frcHome = new File(homeRoot, "${frcYear}")
 } else {
     def userFolder = System.getProperty("user.home")
     def homeRoot = new File(userFolder, "wpilib")
-    frcHome = new File(homeRoot, frcYear)
+    frcHome = new File(homeRoot, "${frcYear}")
 }
 def frcHomeMaven = new File(frcHome, 'maven')
 
@@ -68,7 +65,7 @@ publishing {
             artifact sourceJar
             artifactId = "${baseArtifactId}-java"
             groupId artifactGroupId
-            version = project.hasProperty('release') ? pubVersion : pubVersion + "-SNAPSHOT"
+            version = project.hasProperty('release') ? "${pubVersion}" : "${pubVersion}-SNAPSHOT"
 
             from components.java
         }

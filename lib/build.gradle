@@ -8,7 +8,7 @@
 
 plugins {
     // Apply the java-library plugin for API and implementation separation.
-    id 'java'
+    id 'java-library'
     id 'edu.wpi.first.GradleRIO' version "${wpiVersion}"
 }
 
@@ -21,6 +21,7 @@ repositories {
     maven {url "https://maven.photonvision.org/repository/snapshots"}
     maven {url "https://maven.photonvision.org/repository/internal"}
     maven {url "https://maven.ctr-electronics.com/release/"}
+    maven { url = uri('https://maven.revrobotics.com/') }
 
     maven {
         url = uri("https://maven.pkg.github.com/Mechanical-Advantage/AdvantageKit")
@@ -43,6 +44,7 @@ dependencies {
     implementation "edu.wpi.first.wpilibj:wpilibj-java:${wpiVersion}"
     implementation "edu.wpi.first.wpiutil:wpiutil-java:${wpiVersion}"
     implementation "edu.wpi.first.wpimath:wpimath-java:${wpiVersion}"
+    implementation "edu.wpi.first.wpiunits:wpiunits-java:${wpiVersion}"
     implementation "edu.wpi.first.wpilibNewCommands:wpilibNewCommands-java:${wpiVersion}"
     implementation "edu.wpi.first.hal:hal-java:${wpiVersion}"
     implementation "edu.wpi.first.apriltag:apriltag-java:${wpiVersion}"
@@ -53,9 +55,11 @@ dependencies {
     implementation 'edu.wpi.first.thirdparty.frc2022.opencv:opencv-java:4.5.2-1'
 
     // CTRE Phoenix
-    implementation "com.ctre.phoenix:api-java:${ctreVersion}"
-    implementation "com.ctre.phoenix:wpiapi-java:${ctreVersion}"
-    
+    implementation "com.ctre.phoenix6:wpiapi-java:${ctrePheonix6Version}"
+
+    // REV
+    implementation "com.revrobotics.frc:REVLib-java:${revVersion}"
+
     // PhotonVision
     implementation "org.photonvision:PhotonLib-java:${photonVisionVersion}"
     implementation "org.photonvision:PhotonTargeting-java:${photonVisionVersion}"
