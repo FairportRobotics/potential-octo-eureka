@@ -4,7 +4,7 @@ apply plugin: 'maven-publish'
 
 ext.licenseFile = files("$rootDir/LICENSE.txt")
 
-def pubVersion = '2024.0.1'
+def pubVersion = '2024.0.2'
 
 def outputsFolder = file("$buildDir/allOutputs")
 
@@ -17,7 +17,7 @@ def javaBaseName = "_GROUP_org_fairportrobotics_poe_ID_${baseArtifactId}-java_CL
 
 def releasesRepoUrl = "$buildDir/repos/releases"
 
-String frcYear = '2023'
+String frcYear = '2024'
 File frcHome
 if (OperatingSystem.current().isWindows()) {
     String publicFolder = System.getenv('PUBLIC')
